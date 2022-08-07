@@ -14,16 +14,6 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
 
-
-
-async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-
-
-async def on_shutdown(dispatcher):
-    await bot.delete_webhook()
-
-
 @dp.message_handler()
 async def echo(message: types.Message):
     await message.answer(message.text)

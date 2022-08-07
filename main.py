@@ -25,6 +25,10 @@ poll_storage = dict()
 
 HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 
+TOKEN = '1084737102:AAGSfZBZ_KVb_BAW2QyMHPt0a2PmopsOWuM'
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+
 # webhook settings
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
 WEBHOOK_PATH = f'/webhook/{TOKEN}'
@@ -45,6 +49,13 @@ if __name__ == '__main__':
         host=WEBAPP_HOST,
         port=WEBAPP_PORT,
     )
+
+async def on_startup(dispatcher):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+
+async def on_shutdown(dispatcher):
+    await bot.delete_webhook()
 
 class Form(StatesGroup):
     name = State()
