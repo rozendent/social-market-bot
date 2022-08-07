@@ -14,6 +14,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import json
 import logging
 
+import os
+
 
 from data import db_session
 from data.users import User
@@ -28,6 +30,13 @@ HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 TOKEN = '1084737102:AAGSfZBZ_KVb_BAW2QyMHPt0a2PmopsOWuM'
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
+
+async def on_startup(dispatcher):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+
+
+async def on_shutdown(dispatcher):
+    await bot.delete_webhook()
 
 # webhook settings
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
@@ -50,12 +59,7 @@ if __name__ == '__main__':
         port=WEBAPP_PORT,
     )
 
-async def on_startup(dispatcher):
-    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
-
-async def on_shutdown(dispatcher):
-    await bot.delete_webhook()
 
 class Form(StatesGroup):
     name = State()
